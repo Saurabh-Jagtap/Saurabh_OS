@@ -1,4 +1,6 @@
 import { api } from "~/trpc/server";
+import VisitorPage from "./Visitor";
+
 
 export default async function Home() {
   const { status } = await api.health.getHealth.query();
@@ -7,6 +9,7 @@ export default async function Home() {
       <div>
         <h1 className="text-3xl">Streamyst - Stream in Style</h1>
         <h2>Server Status: {status}</h2>
+        <VisitorPage />
       </div>
     </main>
   );

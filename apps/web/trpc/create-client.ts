@@ -1,6 +1,8 @@
 import { httpLink, httpBatchStreamLink } from "@repo/trpc/client";
 import { env } from "~/env.js";
 
+console.log("NEXT_PUBLIC_API_URL =", env.NEXT_PUBLIC_API_URL);
+
 interface CreateTRPCHttpBatchClientClientOpts {
   enableStreaming?: boolean;
 }
