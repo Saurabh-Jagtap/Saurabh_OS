@@ -44,7 +44,7 @@ const GuestBook = () => {
                 name,
                 message,
             });
-
+            window.location.reload();
             setName("");
             setMessage("");
         } catch (error) {
