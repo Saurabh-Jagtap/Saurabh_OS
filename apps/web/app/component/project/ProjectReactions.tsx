@@ -2,7 +2,10 @@
 import React from 'react'
 import { getVisitorId } from '~/lib/visitor';
 import { trpc } from '~/trpc/client'
-import { REACTIONS, type ReactionType } from '../../../../packages/shared/constants/reactions'
+import {
+  REACTIONS,
+  type ReactionType,
+} from "../../../../../packages/shared/constants/reactions";
 
 interface ProjectReactionsProps {
     projectId: string;

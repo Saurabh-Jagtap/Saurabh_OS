@@ -1,6 +1,34 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@keyframes scan {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.floating-node {
+  animation: float 6s ease-in-out infinite;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
