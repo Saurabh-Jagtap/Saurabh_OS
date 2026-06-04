@@ -7,6 +7,7 @@ import ProjectSection from "./component/sections/ProjectsSection";
 import JourneySection from "./component/sections/JourneySection";
 import GuestbookSection from "./component/sections/GuestbookSection";
 import Contact from "./component/sections/Contact";
+import ArchitectureSection from "./component/sections/ArchitectureSection";
 
 
 export default async function Home() {
@@ -15,6 +16,7 @@ export default async function Home() {
     <main className="min-h-screen min-w-screen">
       <div>
         <HeroSection/>
+        <ArchitectureSection />
         <ProjectSection/>
         <JourneySection/>
         <GuestbookSection/>
