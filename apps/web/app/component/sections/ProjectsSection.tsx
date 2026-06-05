@@ -42,7 +42,7 @@ export default function ProjectsSection() {
     );
   }
   return (
-    <section className="relative bg-[#060810] py-24">
+    <section className="relative bg-[#0a0a0a] py-24">
       <div className="absolute inset-0 opacity-30">
         <div
           className="h-full w-full"

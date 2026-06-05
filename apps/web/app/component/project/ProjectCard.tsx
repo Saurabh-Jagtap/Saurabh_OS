@@ -1,10 +1,14 @@
 interface ProjectCardProps {
   title: string;
-  description: string;
+  description: string | null;
   status: string;
+
   technologies: string[];
+
   githubUrl: string | null;
   liveUrl: string | null;
+
+  coverImage?: string | null;
 }
 
 export default function ProjectCard({
@@ -13,48 +17,53 @@ export default function ProjectCard({
   status,
   technologies,
   githubUrl,
-  liveUrl
+  liveUrl,
+  coverImage,
 }: ProjectCardProps) {
   return (
-    <div className="group overflow-hidden rounded-2xl border border-indigo-500/10 bg-slate-900/70 transition-all hover:-translate-y-1 hover:border-indigo-500/30">
+    <div className="overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-cyan-500/20">
 
-      <div className="relative flex h-36 items-center justify-center bg-gradient-to-br from-indigo-500/10 to-cyan-500/10">
+      {/* IMAGE */}
 
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(99,102,241,0.05) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(99,102,241,0.05) 1px, transparent 1px)
-            `,
-            backgroundSize: "28px 28px",
-          }}
+      <div className="h-48 overflow-hidden border-b border-white/5">
+
+        <img
+          src={
+            coverImage ??
+            "https://placehold.co/1200x700/080b14/00e5ff?text=Project+Preview"
+          }
+          alt={title}
+          className="h-full w-full object-cover"
         />
-
-<div className="relative flex flex-col items-center">
-  <span className="font-mono text-xs uppercase tracking-widest text-cyan-400">
-    PROJECT
-  </span>
-
-  <span className="mt-2 text-2xl font-bold text-slate-100">
-    {title}
-  </span>
-</div>
-
-        <div className="absolute right-4 top-4 rounded-full bg-indigo-500/10 px-3 py-1 font-mono text-xs text-indigo-400">
-          {status}
-        </div>
 
       </div>
 
+      {/* CONTENT */}
+
       <div className="p-6">
 
-        <div className="mb-4 flex flex-wrap gap-2">
+        <div className="mb-3 flex items-center justify-between">
+
+          <h3 className="text-xl font-bold text-white">
+            {title}
+          </h3>
+
+          <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-mono text-cyan-400">
+            {status}
+          </span>
+
+        </div>
+
+        <p className="mb-5 text-sm leading-7 text-zinc-400">
+          {description}
+        </p>
+
+        <div className="mb-6 flex flex-wrap gap-2">
 
           {technologies.map((tech) => (
             <span
               key={tech}
-              className="rounded-md border border-indigo-500/10 bg-indigo-500/10 px-2 py-1 font-mono text-[10px] text-indigo-400"
+              className="rounded-md border border-cyan-500/10 bg-cyan-500/5 px-2 py-1 text-xs font-mono text-cyan-300"
             >
               {tech}
             </span>
@@ -62,37 +71,32 @@ export default function ProjectCard({
 
         </div>
 
-        <h3 className="mb-3 text-xl font-bold text-slate-100">
-          {title}
-        </h3>
+        <div className="flex gap-3">
 
-        <p className="mb-6 font-mono text-sm leading-6 text-slate-500">
-          {description}
-        </p>
+          {liveUrl && (
+            <a
+              href={liveUrl}
+              target="_blank"
+              className="flex-1 rounded-xl bg-cyan-500 px-4 py-3 text-center text-sm font-semibold text-black"
+            >
+              Live Demo
+            </a>
+          )}
 
-        <div className="flex items-center justify-between border-t border-slate-800 pt-4">
-
-          <a
-  href={liveUrl ?? "#"}
-  target="_blank"
-  rel="noreferrer"
-  className="font-mono text-sm text-cyan-400"
->
-  ↗ Live Demo
-</a>
-
-          <a
-  href={githubUrl ?? "#"}
-  target="_blank"
-  rel="noreferrer"
-  className="font-mono text-sm text-slate-400"
->
-  GitHub
-</a>
+          {githubUrl && (
+            <a
+              href={githubUrl}
+              target="_blank"
+              className="flex-1 rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300"
+            >
+              GitHub
+            </a>
+          )}
 
         </div>
 
       </div>
+
     </div>
   );
 }

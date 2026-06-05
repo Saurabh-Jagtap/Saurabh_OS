@@ -11,7 +11,7 @@ export default function ArchitectureTree() {
 
         {/* Header */}
 
-        <div className="mb-20 text-center">
+        <div className="mb-6 text-center">
 
           <div className="mb-4 inline-flex rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 font-mono text-xs uppercase tracking-widest text-cyan-400">
             🗺 System Architecture
@@ -60,11 +60,14 @@ export default function ArchitectureTree() {
 
         {/* Horizontal Connector */}
 
-        <div className="mx-auto h-px max-w-5xl bg-cyan-500/50" />
+        {/* <div className="mx-auto h-px max-w-5xl bg-cyan-500/50" /> */}
+        <div className="relative mx-auto max-w-6xl">
+          <div className="absolute left-0 right-0 top-0 h-px bg-cyan-500/50" />
+        </div>
 
         {/* Branch Connectors */}
 
-        <div className="mx-auto grid max-w-5xl grid-cols-3">
+        <div className="mx-auto grid max-w-7xl grid-cols-3">
 
           <div className="flex justify-center">
             <div className="h-12 w-px bg-cyan-500" />
@@ -104,8 +107,9 @@ export default function ArchitectureTree() {
 
               {ARCHITECTURE.presentation.map((node) => (
                 <ArchitectureNode
-                  key={node}
-                  label={node}
+                  key={node.label}
+                  icon={node.icon}
+                  label={node.label}
                 />
               ))}
 
@@ -133,8 +137,9 @@ export default function ArchitectureTree() {
 
               {ARCHITECTURE.application.map((node) => (
                 <ArchitectureNode
-                  key={node}
-                  label={node}
+                  key={node.label}
+                  icon={node.icon}
+                  label={node.label}
                 />
               ))}
 
@@ -162,8 +167,9 @@ export default function ArchitectureTree() {
 
               {ARCHITECTURE.data.map((node) => (
                 <ArchitectureNode
-                  key={node}
-                  label={node}
+                  key={node.label}
+                  icon={node.icon}
+                  label={node.label}
                 />
               ))}
 

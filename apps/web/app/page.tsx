@@ -17,10 +17,9 @@ export default async function Home() {
     <main className="min-h-screen min-w-screen">
       <div>
         <SchematicBackground>
-          <HeroSection/>
+          <HeroSection />
         </SchematicBackground>
-          <ArchitectureTree/>
-
+        <ArchitectureTree />
         <ProjectSection />
         <JourneySection />
         <GuestbookSection />

@@ -1,8 +1,10 @@
 interface ArchitectureNodeProps {
+  icon: string,
   label: string;
 }
 
 export default function ArchitectureNode({
+  icon,
   label,
 }: ArchitectureNodeProps) {
   return (
@@ -22,7 +24,10 @@ export default function ArchitectureNode({
         hover:bg-cyan-500/[0.04]
       "
     >
-      {label}
+      <div className="flex items-center gap-2">
+        <span>{icon}</span>
+        <span>{label}</span>
+      </div>
     </div>
   );
 }
