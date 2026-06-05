@@ -6,10 +6,10 @@ import ProjectSection from "./component/sections/ProjectsSection";
 import JourneySection from "./component/sections/JourneySection";
 import GuestbookSection from "./component/sections/GuestbookSection";
 import Contact from "./component/sections/ContactSection";
-import ArchitectureSection from "./component/sections/ArchitectureSection";
 import Footer from "./component/layout/Footer";
 import SchematicBackground from "./component/background/SchematicBackground";
 import HeroSection from "./component/sections/HeroSection";
+import ArchitectureTree from "./component/architecture/ArchitectureTree";
 
 export default async function Home() {
   const { status } = await api.health.getHealth.query();
@@ -17,10 +17,10 @@ export default async function Home() {
     <main className="min-h-screen min-w-screen">
       <div>
         <SchematicBackground>
-          {/* <HeroSection /> */}
           <HeroSection/>
         </SchematicBackground>
-        <ArchitectureSection />
+          <ArchitectureTree/>
+
         <ProjectSection />
         <JourneySection />
         <GuestbookSection />
