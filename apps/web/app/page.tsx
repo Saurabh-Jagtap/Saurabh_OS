@@ -6,9 +6,9 @@ import HeroSection from "./component/sections/HeroSection";
 import ProjectSection from "./component/sections/ProjectsSection";
 import JourneySection from "./component/sections/JourneySection";
 import GuestbookSection from "./component/sections/GuestbookSection";
-import Contact from "./component/sections/Contact";
+import Contact from "./component/sections/ContactSection";
 import ArchitectureSection from "./component/sections/ArchitectureSection";
-
+import Footer from "./component/layout/Footer";
 
 export default async function Home() {
   const { status } = await api.health.getHealth.query();
@@ -26,6 +26,7 @@ export default async function Home() {
         <VisitorPage />
         <ProjectReactions projectId="5a774ddf-eb99-4f6c-9910-595c96f3fab3" />
         <GuestBook /> */}
+        <Footer/>
       </div>
     </main>
   );
