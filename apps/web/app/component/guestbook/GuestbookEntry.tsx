@@ -1,13 +1,11 @@
 interface GuestbookEntryProps {
     name: string;
-    role?: string;
     message: string;
     createdAt: string;
 }
 
 export default function GuestbookEntry({
     name,
-    role,
     message,
     createdAt,
 }: GuestbookEntryProps) {
@@ -35,12 +33,6 @@ export default function GuestbookEntry({
                             <h4 className="font-semibold text-slate-100">
                                 {name}
                             </h4>
-
-                            {role && (
-                                <p className="font-mono text-xs text-slate-500">
-                                    {role}
-                                </p>
-                            )}
                         </div>
 
                         <span className="font-mono text-xs text-slate-600">

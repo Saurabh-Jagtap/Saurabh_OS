@@ -1,31 +1,11 @@
+"use client"
 import GuestbookEntry from "../guestbook/GuestbookEntry";
 import GuestbookForm from "../guestbook/GuestbookForm";
-
-const mockEntries = [
-    {
-        name: "Arjun Kumar",
-        role: "Senior SDE",
-        createdAt: "2h ago",
-        message:
-            "The architecture map alone shows you're thinking like an engineer, not just a developer.",
-    },
-    {
-        name: "Priya Mehta",
-        role: "Frontend Developer",
-        createdAt: "1d ago",
-        message:
-            "The journey section felt authentic. Most portfolios only show wins.",
-    },
-    {
-        name: "Rahul Shah",
-        role: "Cohort Peer",
-        createdAt: "2d ago",
-        message:
-            "ChaiSheet was genuinely underrated. Keep shipping.",
-    },
-];
+import { trpc } from '~/trpc/client'
 
 export default function GuestbookSection() {
+    const {data: entries, isLoading} = trpc.guestbook.getEntries.useQuery()
+
     return (
         <section className="relative overflow-hidden bg-[#060810] py-28">
 
@@ -81,10 +61,12 @@ export default function GuestbookSection() {
 
                 <div className="space-y-4">
 
-                    {mockEntries.map((entry) => (
+                    {entries?.map((entry) => (
                         <GuestbookEntry
-                            key={entry.name}
-                            {...entry}
+                            key={entry.id}
+                            name={entry.name}
+                            message={entry.message}
+                            createdAt={new Date(entry.createdAt).toLocaleString()}
                         />
                     ))}
 
@@ -94,7 +76,7 @@ export default function GuestbookSection() {
 
                     <div className="rounded-2xl border border-indigo-500/10 bg-slate-900/60 p-5 text-center">
                         <div className="text-3xl font-black text-slate-100">
-                            47
+                            {entries?.length ?? 0}
                         </div>
 
                         <div className="mt-1 font-mono text-xs uppercase text-slate-600">

@@ -2,28 +2,67 @@
 
 import { useState } from "react";
 import { Send } from "lucide-react";
+import { trpc } from "~/trpc/client";
 
 export default function GuestbookForm() {
-    const [name, setName] = useState("");
-    const [role, setRole] = useState("");
-    const [message, setMessage] = useState("");
+    const [name, setName] = useState('')
+    const [message, setMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
 
-    const handleSubmit = async (
-        e: React.FormEvent
-    ) => {
-        e.preventDefault();
+    const createGuestbookEntry = trpc.guestbook.createEntry.useMutation()
+    const identifyVisitor = trpc.visitor.identify.useMutation();
 
-        console.log({
-            name,
-            role,
-            message,
+    // const { data: entries, isLoading } = trpc.guestbook.getEntries.useQuery()
+    const utils = trpc.useUtils();
+
+    async function initializeVisitor() {
+        const visitorId = localStorage.getItem("visitor_id");
+
+        const visitor = await identifyVisitor.mutateAsync({
+            visitorId: visitorId ?? undefined,
         });
 
-        setName("");
-        setRole("");
-        setMessage("");
-    };
+        localStorage.setItem("visitor_id", visitor.id);
+        return visitor.id;
+    }
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsLoading(true)
+        // Validate input
+        // get visitorId from local storage 
+        // Call the API to create a new guestbook entry
+        if (!name.trim() || !message.trim()) {
+            alert('Please fill in both fields');
+            return;
+        }
+
+        let visitorId = localStorage.getItem('visitor_id');
+
+        if (!visitorId) {
+            visitorId = await initializeVisitor();
+        }
+
+        try {
+            await createGuestbookEntry.mutateAsync({
+                visitorId: visitorId,
+                name,
+                message,
+            });
+            // window.location.reload();
+            await utils.guestbook.getEntries.invalidate()
+            setIsLoading(false)
+            setName("");
+            setMessage("");
+        } catch (error) {
+            console.error("Failed to create guestbook entry:", error);
+            alert("Failed to submit entry")
+        }
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
     return (
         <div className="overflow-hidden rounded-2xl border border-emerald-500/20 bg-slate-900/80">
 
@@ -60,21 +99,6 @@ export default function GuestbookForm() {
                         />
                     </div>
 
-                    <div>
-                        <label className="mb-2 block font-mono text-xs uppercase tracking-wider text-slate-500">
-                            Role (Optional)
-                        </label>
-
-                        <input
-                            value={role}
-                            onChange={(e) =>
-                                setRole(e.target.value)
-                            }
-                            placeholder="Full Stack Engineer"
-                            className="w-full rounded-xl border border-indigo-500/10 bg-[#080B14] px-4 py-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-500/30"
-                        />
-                    </div>
-
                 </div>
 
                 <div>
@@ -103,9 +127,13 @@ export default function GuestbookForm() {
 
                     <button
                         type="submit"
+                        disabled={createGuestbookEntry.isPending}
                         className="flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-mono text-sm font-semibold text-emerald-950 transition-all hover:bg-emerald-400"
                     >
-                        Push Entry
+                        {
+                            createGuestbookEntry.isPending ? "Pushing" : "Push Entry"
+                        }
+
                         <Send size={14} />
                     </button>
 
