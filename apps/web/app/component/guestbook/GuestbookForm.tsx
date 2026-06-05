@@ -28,7 +28,6 @@ export default function GuestbookForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setIsLoading(true)
         // Validate input
         // get visitorId from local storage 
         // Call the API to create a new guestbook entry
@@ -36,12 +35,13 @@ export default function GuestbookForm() {
             alert('Please fill in both fields');
             return;
         }
-
+        
         let visitorId = localStorage.getItem('visitor_id');
-
+        
         if (!visitorId) {
             visitorId = await initializeVisitor();
         }
+        setIsLoading(true)
 
         try {
             await createGuestbookEntry.mutateAsync({

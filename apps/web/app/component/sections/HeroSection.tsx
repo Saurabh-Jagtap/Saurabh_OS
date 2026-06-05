@@ -1,103 +1,295 @@
-import React from "react";
-import { FolderGit2, ArrowRight } from "lucide-react";
-import { Button } from "~/components/ui/button";
+"use client";
+
+import { useState, useEffect } from "react";
+import {
+FolderGit2, ArrowRight, ChevronRight
+} from "lucide-react";
 import Navbar from "../layout/Navbar";
-import { EngineeringWorkspace } from "../hero/EngineeringWorkspace";
+import { BOOT_LINES, STACK } from "../hero/hero-data";
+import SystemMetrics from "../hero/SystemMetrics";
 
-const HeroSection = () => {
-    return (
-        <section className="relative min-h-screen overflow-hidden bg-[#080B14] text-slate-100">
+// ─── Typing animation hook ─────────────────────────────────────────
+function useTypedLines(lines: typeof BOOT_LINES) {
+const [visible, setVisible] = useState<number[]>([]);
 
-            {/* Grid Background */}
-            <div
-                className="absolute inset-0 opacity-100"
-                style={{
-                    backgroundImage: `
-            linear-gradient(rgba(99,102,241,0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(99,102,241,0.06) 1px, transparent 1px)
-          `,
-                    backgroundSize: "48px 48px",
-                }}
-            />
-
-            {/* Animated Scan Line */}
-            <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <div className="absolute h-px w-full bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent animate-[scan_8s_linear_infinite]" />
-            </div>
-
-            {/* Glow Orbs */}
-            <div className="absolute -left-32 -top-20 h-[500px] w-[500px] rounded-full bg-indigo-500/20 blur-[120px]" />
-
-            <div className="absolute right-0 top-40 h-[400px] w-[400px] rounded-full bg-violet-500/20 blur-[120px]" />
-
-            <div className="absolute bottom-0 left-1/3 h-[300px] w-[300px] rounded-full bg-cyan-500/20 blur-[120px]" />
-
-            <Navbar />
-
-            <div className="relative z-10 mx-auto max-w-7xl grid min-h-[calc(100vh-80px)] grid-cols-2 items-center gap-24 px-8">
-
-                {/* LEFT */}
-                <div className="max-w-2xl">
-
-                    <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-emerald-400">
-                        <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                        System Status: Online
-                    </div>
-
-                    <h1 className="mb-8 text-7xl font-black leading-none tracking-tight">
-                        Welcome to
-                        <br />
-                        <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent">
-                            SaurabhOS
-                        </span>
-                    </h1>
-
-                    <p className="mb-10 max-w-lg font-mono text-base leading-8 text-slate-400">
-                        A personal engineering workspace documenting my transition
-                        from developer to engineer through building systems,
-                        shipping products, and learning in public.
-                    </p>
-
-                    <div className="mb-12 space-y-3 font-mono text-sm">
-                        <div className="text-emerald-400">
-                            &gt; building in public_
-                        </div>
-
-                        <div className="text-violet-400">
-                            &gt; engineering in progress_
-                        </div>
-
-                        <div className="text-cyan-400">
-                            &gt; currently shipping SaurabhOS_
-                        </div>
-                    </div>
-
-                    <div className="flex gap-4">
-
-                        <Button className="h-12 bg-indigo-500 hover:bg-indigo-600">
-                            <FolderGit2 className="mr-2 h-4 w-4" />
-                            View Projects
-                        </Button>
-
-                        <Button
-                            variant="outline"
-                            className="h-12 border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800"
-                        >
-                            Engineering Journey
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-
-                    </div>
-                </div>
-
-                {/* RIGHT */}
-                <div className="min-w-0 flex justify-end">
-                    <EngineeringWorkspace />
-                </div>
-
-            </div>
-        </section>
+useEffect(() => {
+    const timers = lines.map(({ delay }, i) =>
+        setTimeout(() => setVisible((v) => [...v, i]), delay + 400)
     );
-};
+    return () => timers.forEach(clearTimeout);
+}, []);
 
-export default HeroSection;
+return visible;
+
+
+}
+
+// ─── Main component ────────────────────────────────────────────────
+export default function HeroSection() {
+const visibleLines = useTypedLines(BOOT_LINES);
+const [cursorBlink, setCursorBlink] = useState(true);
+
+useEffect(() => {
+    const id = setInterval(() => setCursorBlink((b) => !b), 530);
+    return () => clearInterval(id);
+}, []);
+
+return (
+    /*
+     * pointer-events-none on the section shell so the 3D canvas
+     * underneath still receives all mousemove events for its
+     * spotlight reveal. Interactive children (buttons, links)
+     * re-enable pointer-events-auto individually.
+     */
+    <section className="pointer-events-none relative min-h-screen text-slate-100">
+        
+        {/* ── True CSS Glitch Animation Styles ────────────────────── */}
+        <style>{`
+            .glitch-text {
+                position: relative;
+                color: #e0f2fe; /* Electrifying bright cyan/white base */
+                text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); /* Ambient neon glow */
+                font-weight: 900;
+                z-index: 1;
+                display: inline-block;
+            }
+            .glitch-text::before, .glitch-text::after {
+                content: attr(data-text);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0.9;
+            }
+            .glitch-text::before {
+                color: #0ef; /* Pure Electric Cyan */
+                z-index: -1;
+                animation: glitch-anim-1 4s infinite linear alternate-reverse;
+            }
+            .glitch-text::after {
+                color: #6366f1; /* Deep Tech Indigo */
+                z-index: -2;
+                animation: glitch-anim-2 4s infinite linear alternate-reverse;
+            }
+
+            /* Spasmodic Glitch: Rests for 80% of the time, glitches violently for 20% */
+            @keyframes glitch-anim-1 {
+                0%, 80% { clip-path: inset(100% 0 0 0); transform: translate(0, 0); }
+                82% { clip-path: inset(20% 0 80% 0); transform: translate(-4px, 1px); }
+                84% { clip-path: inset(60% 0 10% 0); transform: translate(4px, -1px); }
+                86% { clip-path: inset(40% 0 50% 0); transform: translate(-4px, 2px); }
+                88% { clip-path: inset(80% 0 5% 0); transform: translate(4px, -2px); }
+                90% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 1px); }
+                92% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -1px); }
+                94% { clip-path: inset(100% 0 0 0); transform: translate(0, 0); }
+            }
+
+            @keyframes glitch-anim-2 {
+                0%, 80% { clip-path: inset(100% 0 0 0); transform: translate(0, 0); }
+                81% { clip-path: inset(10% 0 60% 0); transform: translate(4px, -1px); }
+                83% { clip-path: inset(30% 0 20% 0); transform: translate(-4px, 2px); }
+                85% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -1px); }
+                87% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 2px); }
+                89% { clip-path: inset(50% 0 30% 0); transform: translate(4px, 1px); }
+                91% { clip-path: inset(5% 0 80% 0); transform: translate(-4px, -2px); }
+                93% { clip-path: inset(100% 0 0 0); transform: translate(0, 0); }
+            }
+        `}</style>
+
+        {/* Navbar sits above the section — pointer events handled inside it */}
+        {/* <Navbar /> */}
+        <Navbar />
+
+        {/* ── Decorative: scan line (right edge) ───────────────────── */}
+        <div
+            className="pointer-events-none absolute top-1/4 right-8 hidden xl:flex flex-col items-center gap-1 select-none"
+            aria-hidden
+        >
+            {/* Changed to Electric Cyan to match background highlights */}
+            <div className="w-px h-24 bg-gradient-to-b from-transparent via-cyan-500/30 to-transparent" />
+            <div
+                className="w-1.5 h-1.5 rounded-full bg-cyan-400"
+                style={{ boxShadow: "0 0 10px 2px rgba(34,211,238,0.4)" }}
+            />
+            <div className="w-px h-24 bg-gradient-to-b from-transparent via-cyan-500/30 to-transparent" />
+            <span className="font-mono text-[9px] text-slate-600 tracking-[0.2em] uppercase">
+                SYS
+            </span>
+        </div>
+
+        {/* ── Main grid ─────────────────────────────────────────────── */}
+        <div
+            className="relative mx-auto max-w-7xl grid min-h-[calc(100vh-80px)]
+               grid-cols-1 lg:grid-cols-[1fr_auto] items-center
+               gap-12 px-8 pt-28 pb-16"
+        >
+            {/* ════════════════ LEFT COLUMN ════════════════ */}
+            <div className="max-w-2xl">
+
+                {/* Pre-header label */}
+                <div className="pointer-events-auto mb-5 inline-flex items-center gap-2.5">
+                    <span className="font-mono text-[11px] tracking-[0.2em] text-slate-500 uppercase">
+                        // [INIT_SYS_PORTFOLIO]
+                    </span>
+                    <span className="h-px flex-1 w-12 bg-gradient-to-r from-cyan-500/50 to-transparent" />
+                </div>
+
+                {/* Status pill - Swapped Emerald for Tech Cyan to unify palette */}
+                <div
+                    className="pointer-events-auto mb-8 inline-flex items-center gap-2
+                   rounded-full border border-cyan-500/30 bg-cyan-500/[0.05]
+                   px-4 py-1.5 backdrop-blur-sm"
+                >
+                    <span
+                        className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"
+                        style={{ boxShadow: "0 0 8px 3px rgba(34,211,238,0.5)" }}
+                    />
+                    <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-cyan-400">
+                        System Status: Online
+                    </span>
+                </div>
+
+                {/* Main heading with true CSS Glitch */}
+                <h1 className="mb-8 text-[clamp(3rem,7vw,5.5rem)] font-black leading-[0.95] tracking-tight">
+                    <span className="block text-slate-300 text-[clamp(1.5rem,4vw,2.5rem)] mb-3 tracking-normal font-bold">
+                        Welcome to
+                    </span>
+                    <div 
+                        className="glitch-text" 
+                        data-text="SaurabhOS"
+                    >
+                        SaurabhOS
+                    </div>
+                </h1>
+
+                {/* Subtext */}
+                <p className="mb-10 max-w-lg font-mono text-[13px] leading-8 text-zinc-400">
+                    Building systems, shipping products, and documenting the journey from developer to engineer.
+                    Currently building SaurabhOS using a modern full-stack monorepo architecture.
+                </p>
+
+                {/* Terminal lines */}
+                <div className="mb-10 space-y-1 font-mono text-[12px]">
+                    {BOOT_LINES.map(({ color, text }, i) =>
+                        visibleLines.includes(i) ? (
+                            <div key={i} className={`${color} transition-all duration-300`}>
+                                {i === BOOT_LINES.length - 1 ? (
+                                    <>
+                                        {text.replace("_", "")}
+                                        <span
+                                            className="inline-block w-[7px] h-[13px] bg-cyan-400 ml-0.5 align-middle"
+                                            style={{ opacity: cursorBlink ? 1 : 0, transition: "opacity 0.1s" }}
+                                        />
+                                    </>
+                                ) : text}
+                            </div>
+                        ) : null
+                    )}
+                </div>
+
+                {/* Tech stack chips */}
+                <div className="mb-12 flex flex-wrap gap-2">
+                    {STACK.map(({ label, color }) => (
+                        <span
+                            key={label}
+                            className={`
+              inline-flex items-center gap-1.5
+              rounded-lg border px-3 py-1
+              font-mono text-[11px] tracking-wide
+              bg-black/40 backdrop-blur-md
+              ${color} border-white/5
+            `}
+                        >
+                            <span className="opacity-50 text-cyan-500">//</span>
+                            {label}
+                        </span>
+                    ))}
+                </div>
+
+                {/* CTAs */}
+                <div className="pointer-events-auto flex flex-wrap gap-4">
+
+                    {/* Primary CTA — Glassmorphism Blueprint Style */}
+                    <button
+                        className="
+                            group relative flex items-center gap-2.5
+                            px-7 py-3.5
+                            bg-cyan-950/40 hover:bg-cyan-900/40
+                            border border-cyan-500/30 hover:border-cyan-400
+                            text-cyan-300 hover:text-cyan-100 text-sm font-semibold
+                            backdrop-blur-md
+                            transition-all duration-300
+                        "
+                        style={{
+                            clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))",
+                        }}
+                    >
+                        {/* Sweep shimmer on hover */}
+                        <span
+                            className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%]
+                            bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent
+                            transition-transform duration-700"
+                        />
+                        <FolderGit2 className="relative z-10 w-4 h-4" />
+                        <span className="relative z-10 tracking-wide">Explore Projects</span>
+                        <ChevronRight className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+                    </button>
+
+                    {/* Secondary CTA — ghost glass */}
+                    <button
+                        className="
+                            group relative flex items-center gap-2.5
+                            px-7 py-3.5
+                            border border-white/5 hover:border-indigo-500/40
+                            bg-white/[0.02] hover:bg-indigo-500/[0.05]
+                            text-slate-400 hover:text-indigo-200
+                            text-sm font-mono
+                            rounded-lg
+                            backdrop-blur-sm
+                            transition-all duration-300
+                        "
+                    >
+                        Engineering Journey
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+                    </button>
+
+                </div>
+            </div>
+
+            <SystemMetrics />
+        </div>
+
+        {/* ── Bottom HUD bar ────────────────────────────────────────── */}
+        <div
+            className="pointer-events-none absolute bottom-0 inset-x-0
+               border-t border-white/[0.04] px-8 py-3
+               flex items-center justify-between bg-black/20 backdrop-blur-sm"
+            aria-hidden
+        >
+            <span className="font-mono text-[10px] text-slate-500 tracking-[0.18em] uppercase">
+                saurabh@os:~/$&nbsp;&nbsp;
+                <span className="text-cyan-400">learning · building · shipping</span>
+            </span>
+            <div className="flex items-center gap-4">
+                <span className="font-mono text-[10px] text-slate-500">60 FPS</span>
+                <div className="flex gap-1">
+                    {[...Array(4)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="w-0.5 bg-cyan-500/40"
+                            style={{ height: 8 + Math.sin(i * 1.4) * 4, alignSelf: "flex-end" }}
+                        />
+                    ))}
+                </div>
+                <span className="font-mono text-[10px] text-cyan-500/70 tracking-widest uppercase">
+                    ACTIVE
+                </span>
+            </div>
+        </div>
+
+    </section>
+);
+
+
+}
