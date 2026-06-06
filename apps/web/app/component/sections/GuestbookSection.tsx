@@ -79,7 +79,7 @@ function StatCard({
 
 // ─── Main section ─────────────────────────────────────────────────
 export default function GuestbookSection() {
-    const { data: entries, isLoading } = trpc.guestbook.getEntries.useQuery({limit: 3})
+    const { data: entries, isLoading } = trpc.guestbook.getEntries.useQuery({ limit: 3 })
 
     const sectionRef = useRef<HTMLElement>(null);
     const [visible, setVisible] = useState(false);
@@ -264,7 +264,7 @@ export default function GuestbookSection() {
                     {isLoading && (
                         <div className="flex flex-col items-center justify-center py-16 gap-4">
                             <div className="flex gap-1 items-end">
-                                {[4,7,5,9,6,8,4].map((h, i) => (
+                                {[4, 7, 5, 9, 6, 8, 4].map((h, i) => (
                                     <div
                                         key={i}
                                         className="w-0.5 rounded-full"
@@ -305,6 +305,9 @@ export default function GuestbookSection() {
                             }}
                         >
                             <GuestbookEntry
+                                key={entry.id}
+                                id={entry.id}
+                                visitorId={entry.visitorId}
                                 name={entry.name}
                                 message={entry.message}
                                 createdAt={new Date(entry.createdAt).toLocaleString()}

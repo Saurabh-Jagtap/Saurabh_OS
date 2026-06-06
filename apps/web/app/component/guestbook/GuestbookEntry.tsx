@@ -1,14 +1,74 @@
+"use client"
+import { useEffect, useState } from "react";
+import { trpc } from "~/trpc/client";
+
 interface GuestbookEntryProps {
+    id: string;
+    visitorId: string;
+
     name: string;
     message: string;
     createdAt: string;
 }
 
 export default function GuestbookEntry({
+    id,
+    visitorId,
     name,
     message,
     createdAt,
 }: GuestbookEntryProps) {
+    const [currentVisitorId, setCurrentVisitorId] = useState<string | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedMessage, setEditedMessage] = useState(message);
+
+    const utils = trpc.useUtils();
+
+    const deleteEntry = trpc.guestbook.deleteEntry.useMutation({
+        onSuccess: async () => {
+            await utils.guestbook.getEntries.invalidate();
+        },
+    });
+
+    const updateEntry = trpc.guestbook.updateEntry.useMutation({
+        onSuccess: async () => {
+            await utils.guestbook.getEntries.invalidate();
+        },
+    });
+
+    useEffect(() => {
+        setCurrentVisitorId(
+            localStorage.getItem("visitor_id")
+        );
+    }, []);
+
+    const isOwner = currentVisitorId === visitorId;
+
+    async function handleDelete() {
+        if (
+            !window.confirm(
+                "Delete this guestbook entry?"
+            )
+        ) {
+            return;
+        }
+
+        await deleteEntry.mutateAsync({
+            entryId: id,
+            visitorId,
+        });
+    }
+
+    async function handleSave() {
+        await updateEntry.mutateAsync({
+            entryId: id,
+            visitorId,
+            message: editedMessage,
+        });
+
+        setIsEditing(false);
+    }
+
     const initials = name
         .split(" ")
         .map((word) => word[0])
@@ -18,11 +78,11 @@ export default function GuestbookEntry({
 
     // Deterministic accent color per visitor name (cycles through palette)
     const ACCENTS = [
-        { text: "#22d3ee", bg: "rgba(6,182,212,0.08)",   border: "rgba(6,182,212,0.25)",  glow: "rgba(6,182,212,0.4)"  },
-        { text: "#e879f9", bg: "rgba(217,70,239,0.08)",  border: "rgba(217,70,239,0.25)", glow: "rgba(217,70,239,0.4)" },
-        { text: "#34d399", bg: "rgba(52,211,153,0.08)",  border: "rgba(52,211,153,0.25)", glow: "rgba(52,211,153,0.4)" },
-        { text: "#818cf8", bg: "rgba(99,102,241,0.08)",  border: "rgba(99,102,241,0.25)", glow: "rgba(99,102,241,0.4)" },
-        { text: "#fbbf24", bg: "rgba(251,191,36,0.08)",  border: "rgba(251,191,36,0.25)", glow: "rgba(251,191,36,0.4)" },
+        { text: "#22d3ee", bg: "rgba(6,182,212,0.08)", border: "rgba(6,182,212,0.25)", glow: "rgba(6,182,212,0.4)" },
+        { text: "#e879f9", bg: "rgba(217,70,239,0.08)", border: "rgba(217,70,239,0.25)", glow: "rgba(217,70,239,0.4)" },
+        { text: "#34d399", bg: "rgba(52,211,153,0.08)", border: "rgba(52,211,153,0.25)", glow: "rgba(52,211,153,0.4)" },
+        { text: "#818cf8", bg: "rgba(99,102,241,0.08)", border: "rgba(99,102,241,0.25)", glow: "rgba(99,102,241,0.4)" },
+        { text: "#fbbf24", bg: "rgba(251,191,36,0.08)", border: "rgba(251,191,36,0.25)", glow: "rgba(251,191,36,0.4)" },
     ];
     const accent = ACCENTS[
         name.split("").reduce((s, c) => s + c.charCodeAt(0), 0) % ACCENTS.length
@@ -123,9 +183,96 @@ export default function GuestbookEntry({
                                 visitor@saurabhos:~$
                             </span>
                         </div>
-                        <p className="font-mono text-[12px] leading-6 text-slate-300 pl-5">
-                            {message}
-                        </p>
+                        {isEditing ? (
+                            <textarea
+                                value={editedMessage}
+                                onChange={(e) =>
+                                    setEditedMessage(e.target.value)
+                                }
+                                className="mt-2 w-full rounded-xl border border-indigo-500/20 bg-[#080B14] p-3 text-sm text-slate-200 outline-none
+    "
+                            />
+                        ) : (
+                            <p className="font-mono text-sm leading-7 text-slate-400">
+                                {message}
+                            </p>
+                        )}
+
+                        {isOwner && (
+                            <div className="mt-4 flex gap-2">
+
+                                {isEditing ? (
+                                    <>
+                                        <div className="mt-4 flex gap-2">
+
+                                            <button
+                                                onClick={handleSave}
+                                                disabled={updateEntry.isPending}
+                                                className="
+      group
+      flex items-center gap-2
+      rounded-lg
+      border border-emerald-500/20
+      bg-emerald-500/10
+      px-4 py-2
+      text-xs font-mono
+      text-emerald-400
+      transition-all
+      hover:border-emerald-400/40
+      hover:bg-emerald-500/15
+      hover:shadow-[0_0_18px_rgba(16,185,129,0.25)]
+    "
+                                            >
+                                                <span>✓</span>
+                                                {updateEntry.isPending ? "Saving..." : "Save Changes"}
+                                            </button>
+
+                                            <button
+                                                onClick={() => {
+                                                    setEditedMessage(message);
+                                                    setIsEditing(false);
+                                                }}
+                                                className="
+      group
+      flex items-center gap-2
+      rounded-lg
+      border border-slate-700
+      bg-slate-900/60
+      px-4 py-2
+      text-xs font-mono
+      text-slate-300
+      transition-all
+      hover:border-cyan-500/20
+      hover:text-cyan-400
+      hover:bg-cyan-500/5
+    "
+                                            >
+                                                <span>↶</span>
+                                                Cancel Edit
+                                            </button>
+
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => setIsEditing(true)}
+                                            className="rounded-lg border border-cyan-500/20 px-3 py-2 text-xs font-mono text-cyan-400"
+                                        >
+                                            Edit
+                                        </button>
+
+                                        <button
+                                            onClick={handleDelete}
+                                            className="rounded-lg border border-red-500/20 px-3 py-2 text-xs font-mono text-red-400"
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                )}
+
+                            </div>
+                        )}
                     </div>
 
                 </div>

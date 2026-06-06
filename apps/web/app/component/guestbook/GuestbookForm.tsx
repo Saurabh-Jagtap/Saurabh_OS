@@ -31,9 +31,9 @@ export default function GuestbookForm() {
             alert('Please fill in both fields');
             return;
         }
-        
+
         let visitorId = localStorage.getItem('visitor_id');
-        
+
         if (!visitorId) {
             visitorId = await initializeVisitor();
         }
@@ -71,7 +71,7 @@ export default function GuestbookForm() {
             >
                 <div className="flex flex-col items-center gap-3">
                     <div className="flex gap-1">
-                        {[0,1,2,3,4].map((i) => (
+                        {[0, 1, 2, 3, 4].map((i) => (
                             <div
                                 key={i}
                                 className="w-0.5 rounded-full"
@@ -124,15 +124,15 @@ export default function GuestbookForm() {
                 }}
             >
                 {/* Corner crosshairs */}
-                {(["tl","tr","bl","br"] as const).map((pos) => (
+                {(["tl", "tr", "bl", "br"] as const).map((pos) => (
                     <div
                         key={pos}
                         className="absolute w-3 h-3 pointer-events-none"
                         style={{
-                            top:    pos.startsWith("t") ? 6 : undefined,
+                            top: pos.startsWith("t") ? 6 : undefined,
                             bottom: pos.startsWith("b") ? 6 : undefined,
-                            left:   pos.endsWith("l")   ? 6 : undefined,
-                            right:  pos.endsWith("r")   ? 6 : undefined,
+                            left: pos.endsWith("l") ? 6 : undefined,
+                            right: pos.endsWith("r") ? 6 : undefined,
                         }}
                     >
                         <div className="absolute top-1/2 left-0 right-0 h-px bg-emerald-500/20" />
@@ -213,7 +213,7 @@ export default function GuestbookForm() {
                                 className="absolute left-3 top-3 flex flex-col gap-[18px] pointer-events-none select-none"
                                 aria-hidden
                             >
-                                {[1,2,3,4].map((n) => (
+                                {[1, 2, 3, 4].map((n) => (
                                     <span key={n} className="font-mono text-[9px] text-slate-700 leading-none">{n}</span>
                                 ))}
                             </div>
@@ -277,11 +277,11 @@ export default function GuestbookForm() {
                             {isPending ? (
                                 <>
                                     <span className="relative z-10 flex gap-0.5">
-                                        {[0,1,2].map((i) => (
+                                        {[0, 1, 2].map((i) => (
                                             <span
                                                 key={i}
                                                 className="inline-block w-1 h-1 rounded-full bg-emerald-400"
-                                                style={{ animation: `gb-bar 0.7s ${i*0.15}s ease-in-out infinite alternate` }}
+                                                style={{ animation: `gb-bar 0.7s ${i * 0.15}s ease-in-out infinite alternate` }}
                                             />
                                         ))}
                                     </span>

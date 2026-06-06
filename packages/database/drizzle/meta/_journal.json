@@ -15,6 +15,13 @@
       "when": 1780310240238,
       "tag": "0001_unusual_true_believers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780736564249,
+      "tag": "0002_concerned_silverclaw",
+      "breakpoints": true
     }
   ]
 }
