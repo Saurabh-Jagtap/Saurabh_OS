@@ -1,5 +1,4 @@
 import React from 'react'
-import { CornerBracket } from './CornerBracket'
 import { GitBranch, Terminal } from 'lucide-react'
 import { METRICS } from './hero-data'
 
