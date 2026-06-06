@@ -21,7 +21,6 @@ useEffect(() => {
 
 return visible;
 
-
 }
 
 // ─── Main component ────────────────────────────────────────────────

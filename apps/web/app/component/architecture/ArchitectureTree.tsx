@@ -5,7 +5,7 @@ import { ARCHITECTURE } from "./architecture-data";
 
 export default function ArchitectureTree() {
   return (
-    <section className="bg-black py-28">
+    <section className="py-28">
 
       <div className="mx-auto max-w-7xl px-8">
 

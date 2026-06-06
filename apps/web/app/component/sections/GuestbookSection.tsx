@@ -97,18 +97,8 @@ export default function GuestbookSection() {
         <section
             ref={sectionRef}
             className="relative overflow-hidden"
-            style={{ background: "#0a0a0a", minHeight: "100vh" }}
+            style={{ minHeight: "100vh" }}
         >
-            {/* ── Ambient glows ─────────────────────────────────── */}
-            <div
-                className="absolute -left-32 top-0 w-[480px] h-[480px] rounded-full pointer-events-none"
-                style={{ background: "radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 70%)" }}
-            />
-            <div
-                className="absolute bottom-0 right-0 w-[350px] h-[350px] rounded-full pointer-events-none"
-                style={{ background: "radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%)" }}
-            />
-
             {/* ── Right decorative scan bar ─────────────────────── */}
             <div
                 className="absolute top-1/3 right-6 hidden xl:flex flex-col items-center gap-1 pointer-events-none select-none"

@@ -50,7 +50,7 @@ export default function ContactSection() {
   return (
     <section
       ref={ref}
-      className="pointer-events-none relative overflow-hidden bg-black py-28"
+      className="pointer-events-none relative overflow-hidden py-28"
     >
       {/* ── Global styles (glitch + custom scrollbar) ─────────────── */}
       <style>{`
@@ -93,29 +93,6 @@ export default function ContactSection() {
           92% { clip-path: inset(100% 0 0 0); transform: translate(0,0); }
         }
       `}</style>
-
-      {/* ── Grid background ───────────────────────────────────────── */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)
-          `,
-          backgroundSize: "48px 48px",
-        }}
-      />
-
-      {/* ── Ambient orbs ──────────────────────────────────────────── */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-24 top-0 h-[520px] w-[520px] rounded-full bg-indigo-500/[0.07] blur-[130px]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-24 bottom-0 h-[400px] w-[400px] rounded-full bg-cyan-500/[0.06] blur-[120px]"
-      />
 
       {/* ── Decorative: right-edge scan line ─────────────────────── */}
       <div

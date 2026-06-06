@@ -20,17 +20,26 @@ export default async function Home() {
       <div>
         <SchematicBackground>
           <HeroSection />
+          <ArchitectureTree />
+          <ProjectSection />
         </SchematicBackground>
-        <ArchitectureTree />
-        <ProjectSection />
-        <JourneySection />
-        <GuestbookSection />
-        <ContactSection />
+
+        <SchematicBackground>
+          <JourneySection />
+        </SchematicBackground>
+
+        <SchematicBackground>
+          <GuestbookSection />
+          <ContactSection />
+        </SchematicBackground>
+
+        <Footer />
+        {/* <SchematicBackground>
+        </SchematicBackground> */}
         {/* <h1 className="text-3xl">Streamyst - Stream in Style</h1>
         <h2>Server Status: {status}</h2>
         <VisitorPage />
         <ProjectReactions projectId="5a774ddf-eb99-4f6c-9910-595c96f3fab3" />*/}
-        <Footer />
       </div>
     </main>
   );
