@@ -12,7 +12,6 @@ export default function GuestbookForm() {
     const createGuestbookEntry = trpc.guestbook.createEntry.useMutation()
     const identifyVisitor = trpc.visitor.identify.useMutation();
 
-    // const { data: entries, isLoading } = trpc.guestbook.getEntries.useQuery()
     const utils = trpc.useUtils();
 
     async function initializeVisitor() {
@@ -28,9 +27,6 @@ export default function GuestbookForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        // Validate input
-        // get visitorId from local storage 
-        // Call the API to create a new guestbook entry
         if (!name.trim() || !message.trim()) {
             alert('Please fill in both fields');
             return;
@@ -49,7 +45,6 @@ export default function GuestbookForm() {
                 name,
                 message,
             });
-            // window.location.reload();
             await utils.guestbook.getEntries.invalidate()
             setIsLoading(false)
             setName("");
@@ -60,87 +55,252 @@ export default function GuestbookForm() {
         }
     }
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-    return (
-        <div className="overflow-hidden rounded-2xl border border-emerald-500/20 bg-slate-900/80">
+    const isPending = createGuestbookEntry.isPending || isLoading;
+    const charCount = message.length;
+    const nameCount = name.length;
 
-            <div className="border-b border-emerald-500/10 bg-emerald-500/5 px-6 py-4">
-
-                <div className="font-mono text-xs uppercase tracking-widest text-slate-400">
-                    <span className="text-emerald-400">
-                        &gt;_
-                    </span>{" "}
-                    visitor_log.write()
-                </div>
-
-            </div>
-
-            <form
-                onSubmit={handleSubmit}
-                className="space-y-5 p-6"
+    // ─── Loading skeleton ─────────────────────────────────────────
+    if (isLoading && !createGuestbookEntry.isPending) {
+        return (
+            <div
+                className="rounded-2xl overflow-hidden flex items-center justify-center py-12"
+                style={{
+                    border: "1px solid rgba(52,211,153,0.15)",
+                    background: "rgba(8,11,20,0.8)",
+                }}
             >
+                <div className="flex flex-col items-center gap-3">
+                    <div className="flex gap-1">
+                        {[0,1,2,3,4].map((i) => (
+                            <div
+                                key={i}
+                                className="w-0.5 rounded-full"
+                                style={{
+                                    height: 20,
+                                    background: "#34d399",
+                                    opacity: 0.6,
+                                    animation: `gb-bar 0.9s ${i * 0.12}s ease-in-out infinite alternate`,
+                                }}
+                            />
+                        ))}
+                    </div>
+                    <span className="font-mono text-[11px] text-emerald-500 tracking-widest">INITIALIZING...</span>
+                </div>
+            </div>
+        );
+    }
 
-                <div className="grid gap-4 md:grid-cols-2">
+    return (
+        <>
+            <style>{`
+                @keyframes gb-bar {
+                    from { transform: scaleY(0.4); opacity: 0.4; }
+                    to   { transform: scaleY(1.2); opacity: 1; }
+                }
+                @keyframes gb-cursor {
+                    0%, 100% { opacity: 1; }
+                    50%      { opacity: 0; }
+                }
+                @keyframes gb-scan {
+                    0%   { top: 0; }
+                    100% { top: 100%; }
+                }
+                .gb-input:focus {
+                    outline: none;
+                    border-color: rgba(52,211,153,0.4) !important;
+                    box-shadow: 0 0 0 1px rgba(52,211,153,0.15), inset 0 0 20px rgba(52,211,153,0.03);
+                }
+                .gb-input::placeholder { color: rgba(100,116,139,0.6); }
+                .gb-input::selection { background: rgba(52,211,153,0.2); }
+            `}</style>
 
-                    <div>
-                        <label className="mb-2 block font-mono text-xs uppercase tracking-wider text-slate-500">
-                            Your Name
-                        </label>
+            <div
+                className="relative overflow-hidden rounded-2xl"
+                style={{
+                    border: "1px solid rgba(52,211,153,0.15)",
+                    background: "rgba(8,11,20,0.85)",
+                    backdropFilter: "blur(12px)",
+                    boxShadow: "0 0 60px -20px rgba(52,211,153,0.1), inset 0 1px 0 rgba(255,255,255,0.03)",
+                }}
+            >
+                {/* Corner crosshairs */}
+                {(["tl","tr","bl","br"] as const).map((pos) => (
+                    <div
+                        key={pos}
+                        className="absolute w-3 h-3 pointer-events-none"
+                        style={{
+                            top:    pos.startsWith("t") ? 6 : undefined,
+                            bottom: pos.startsWith("b") ? 6 : undefined,
+                            left:   pos.endsWith("l")   ? 6 : undefined,
+                            right:  pos.endsWith("r")   ? 6 : undefined,
+                        }}
+                    >
+                        <div className="absolute top-1/2 left-0 right-0 h-px bg-emerald-500/20" />
+                        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-emerald-500/20" />
+                    </div>
+                ))}
 
-                        <input
-                            value={name}
-                            onChange={(e) =>
-                                setName(e.target.value)
-                            }
-                            placeholder="Saurabh Jagtap"
-                            className="w-full rounded-xl border border-indigo-500/10 bg-[#080B14] px-4 py-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-500/30"
-                        />
+                {/* ── Terminal header bar ──────────────────────────── */}
+                <div
+                    className="flex items-center justify-between px-5 py-3"
+                    style={{ borderBottom: "1px solid rgba(52,211,153,0.08)", background: "rgba(52,211,153,0.03)" }}
+                >
+                    <div className="flex items-center gap-3">
+                        {/* Window dots */}
+                        <div className="flex gap-1.5">
+                            <div className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(239,68,68,0.5)" }} />
+                            <div className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(251,191,36,0.5)" }} />
+                            <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#34d399", opacity: 0.7, boxShadow: "0 0 6px 1px rgba(52,211,153,0.5)" }} />
+                        </div>
+                        <div className="w-px h-3 bg-slate-700" />
+                        <span className="font-mono text-[11px] text-slate-500">
+                            <span className="text-emerald-400">&gt;_</span>
+                            {" "}visitor_log.write()
+                        </span>
                     </div>
 
+                    <div className="flex items-center gap-2">
+                        <div
+                            className="w-1.5 h-1.5 rounded-full"
+                            style={{ background: "#34d399", boxShadow: "0 0 6px 2px rgba(52,211,153,0.5)", animation: "gb-bar 1.8s ease-in-out infinite alternate" }}
+                        />
+                        <span className="font-mono text-[9px] text-emerald-500 tracking-widest">OPEN_CHANNEL</span>
+                    </div>
                 </div>
 
-                <div>
+                {/* ── Form body ────────────────────────────────────── */}
+                <form onSubmit={handleSubmit} className="p-5 space-y-4">
 
-                    <label className="mb-2 block font-mono text-xs uppercase tracking-wider text-slate-500">
-                        Message
-                    </label>
+                    {/* Name field */}
+                    <div>
+                        <label className="flex items-center gap-2 mb-2">
+                            <span className="font-mono text-[9px] text-emerald-500 tracking-widest">IDENT_NAME</span>
+                            <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(52,211,153,0.2), transparent)" }} />
+                            <span className="font-mono text-[9px] text-slate-700">{nameCount}/48</span>
+                        </label>
+                        <div className="relative">
+                            <div
+                                className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-[11px] pointer-events-none select-none"
+                                style={{ color: "#34d39960" }}
+                            >
+                                &gt;
+                            </div>
+                            <input
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Your name"
+                                maxLength={48}
+                                className="gb-input w-full rounded-xl pl-8 pr-4 py-3 font-mono text-sm text-slate-200 transition-all duration-200"
+                                style={{
+                                    background: "rgba(0,0,0,0.35)",
+                                    border: "1px solid rgba(255,255,255,0.06)",
+                                    caretColor: "#34d399",
+                                }}
+                            />
+                        </div>
+                    </div>
 
-                    <textarea
-                        value={message}
-                        onChange={(e) =>
-                            setMessage(e.target.value)
-                        }
-                        placeholder="Thoughts on SaurabhOS..."
-                        rows={5}
-                        className="w-full resize-none rounded-xl border border-indigo-500/10 bg-[#080B14] px-4 py-3 font-mono text-sm text-slate-200 outline-none focus:border-emerald-500/30"
-                    />
+                    {/* Message field */}
+                    <div>
+                        <label className="flex items-center gap-2 mb-2">
+                            <span className="font-mono text-[9px] text-emerald-500 tracking-widest">TRANSMISSION</span>
+                            <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(52,211,153,0.2), transparent)" }} />
+                            <span className="font-mono text-[9px] text-slate-700">{charCount}/280</span>
+                        </label>
+                        <div className="relative">
+                            {/* Line numbers */}
+                            <div
+                                className="absolute left-3 top-3 flex flex-col gap-[18px] pointer-events-none select-none"
+                                aria-hidden
+                            >
+                                {[1,2,3,4].map((n) => (
+                                    <span key={n} className="font-mono text-[9px] text-slate-700 leading-none">{n}</span>
+                                ))}
+                            </div>
+                            <textarea
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                placeholder="Thoughts on SaurabhOS..."
+                                rows={4}
+                                maxLength={280}
+                                className="gb-input w-full resize-none rounded-xl pl-8 pr-4 py-3 font-mono text-sm text-slate-200 transition-all duration-200"
+                                style={{
+                                    background: "rgba(0,0,0,0.35)",
+                                    border: "1px solid rgba(255,255,255,0.06)",
+                                    caretColor: "#34d399",
+                                    lineHeight: "1.75rem",
+                                }}
+                            />
+                        </div>
+                    </div>
 
-                </div>
+                    {/* Footer row */}
+                    <div className="flex items-center justify-between gap-4 pt-1">
+                        <span className="font-mono text-[10px] text-slate-700">
+                            // No login required. Entry is public.
+                        </span>
 
-                <div className="flex items-center justify-between">
+                        <button
+                            type="submit"
+                            disabled={isPending}
+                            className="group relative flex items-center gap-2.5 rounded-lg px-5 py-2.5 font-mono text-[11px] font-bold tracking-wider transition-all duration-200 overflow-hidden"
+                            style={{
+                                background: isPending
+                                    ? "rgba(52,211,153,0.1)"
+                                    : "rgba(52,211,153,0.12)",
+                                border: "1px solid rgba(52,211,153,0.35)",
+                                color: "#34d399",
+                                clipPath: "polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))",
+                            }}
+                            onMouseEnter={(e) => {
+                                if (!isPending) {
+                                    (e.currentTarget as HTMLButtonElement).style.background = "rgba(52,211,153,0.2)";
+                                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(52,211,153,0.6)";
+                                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 20px -4px rgba(52,211,153,0.4)";
+                                }
+                            }}
+                            onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLButtonElement).style.background = "rgba(52,211,153,0.12)";
+                                (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(52,211,153,0.35)";
+                                (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
+                            }}
+                        >
+                            {/* Shimmer sweep */}
+                            <span
+                                className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] pointer-events-none"
+                                style={{
+                                    background: "linear-gradient(90deg, transparent, rgba(52,211,153,0.1), transparent)",
+                                    transition: "transform 0.6s ease",
+                                }}
+                            />
 
-                    <p className="font-mono text-xs text-slate-600">
-                        // No login required.
-                    </p>
+                            {isPending ? (
+                                <>
+                                    <span className="relative z-10 flex gap-0.5">
+                                        {[0,1,2].map((i) => (
+                                            <span
+                                                key={i}
+                                                className="inline-block w-1 h-1 rounded-full bg-emerald-400"
+                                                style={{ animation: `gb-bar 0.7s ${i*0.15}s ease-in-out infinite alternate` }}
+                                            />
+                                        ))}
+                                    </span>
+                                    <span className="relative z-10">PUSHING</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="relative z-10">PUSH_ENTRY</span>
+                                    <Send
+                                        size={12}
+                                        className="relative z-10 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                                    />
+                                </>
+                            )}
+                        </button>
+                    </div>
 
-                    <button
-                        type="submit"
-                        disabled={createGuestbookEntry.isPending}
-                        className="flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-mono text-sm font-semibold text-emerald-950 transition-all hover:bg-emerald-400"
-                    >
-                        {
-                            createGuestbookEntry.isPending ? "Pushing" : "Push Entry"
-                        }
-
-                        <Send size={14} />
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
+                </form>
+            </div>
+        </>
     );
 }

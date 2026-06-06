@@ -5,11 +5,12 @@ import ProjectReactions from "./component/project/ProjectReactions";
 import ProjectSection from "./component/sections/ProjectsSection";
 import JourneySection from "./component/sections/JourneySection";
 import GuestbookSection from "./component/sections/GuestbookSection";
-import Contact from "./component/sections/ContactSection";
+import ContactSection from "./component/sections/ContactSection";
 import Footer from "./component/layout/Footer";
 import SchematicBackground from "./component/background/SchematicBackground";
 import HeroSection from "./component/sections/HeroSection";
 import ArchitectureTree from "./component/architecture/ArchitectureTree";
+import ClaudeContactSection from "./component/sections/claudeContactSection";
 
 export default async function Home() {
   const { status } = await api.health.getHealth.query();
@@ -23,7 +24,8 @@ export default async function Home() {
         <ProjectSection />
         <JourneySection />
         <GuestbookSection />
-        <Contact />
+        {/* <ContactSection /> */}
+        <ClaudeContactSection/>
         {/* <h1 className="text-3xl">Streamyst - Stream in Style</h1>
         <h2>Server Status: {status}</h2>
         <VisitorPage />

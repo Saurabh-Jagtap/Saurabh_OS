@@ -6,6 +6,10 @@ export const CreateGuestbookEntryInput = z.object({
   message: z.string().min(1),
 });
 
-export type CreateGuestbookEntryInput = z.infer<
-  typeof CreateGuestbookEntryInput
->;
+export const getEntriesSchema = z.object({
+  limit: z.number().optional()
+}).optional()
+
+export type CreateGuestbookEntryInput = z.infer<typeof CreateGuestbookEntryInput>;
+
+export type getEntriesSchema = z.infer<typeof getEntriesSchema>;

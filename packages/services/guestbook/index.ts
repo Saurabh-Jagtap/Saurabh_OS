@@ -23,8 +23,18 @@ class GuestbookService {
 
     }
 
-    public async getGuestbookEntries() {
-        const entries = await db
+    public async getGuestbookEntries(limit?: number) {
+        let entries;
+        if (limit) {
+            entries = await db
+                .select()
+                .from(guestbooksTable)
+                .orderBy(desc(guestbooksTable.createdAt))
+                .limit(limit);
+
+                return entries;
+        }
+        entries = await db
             .select()
             .from(guestbooksTable)
             .orderBy(desc(guestbooksTable.createdAt));
