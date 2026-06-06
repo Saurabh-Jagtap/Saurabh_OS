@@ -97,39 +97,8 @@ export default function GuestbookSection() {
         <section
             ref={sectionRef}
             className="relative overflow-hidden"
-            style={{ background: "#060810", minHeight: "100vh" }}
+            style={{ background: "#0a0a0a", minHeight: "100vh" }}
         >
-            {/* ── Global keyframes ─────────────────────────────── */}
-            <style>{`
-                @keyframes gb-fadein {
-                    from { opacity: 0; transform: translateY(18px); }
-                    to   { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes gb-pulse-dot {
-                    0%, 100% { opacity: 1; box-shadow: 0 0 6px 2px rgba(52,211,153,0.5); }
-                    50%       { opacity: 0.5; box-shadow: 0 0 2px 0 rgba(52,211,153,0.2); }
-                }
-                @keyframes gb-glow-breathe {
-                    0%, 100% { opacity: 0.5; }
-                    50%       { opacity: 1; }
-                }
-                @keyframes gb-march {
-                    to { stroke-dashoffset: -20; }
-                }
-            `}</style>
-
-            {/* ── Grid backdrop ────────────────────────────────── */}
-            <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                    backgroundImage: `
-                        linear-gradient(rgba(16,185,129,0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(16,185,129,0.03) 1px, transparent 1px)
-                    `,
-                    backgroundSize: "48px 48px",
-                }}
-            />
-
             {/* ── Ambient glows ─────────────────────────────────── */}
             <div
                 className="absolute -left-32 top-0 w-[480px] h-[480px] rounded-full pointer-events-none"

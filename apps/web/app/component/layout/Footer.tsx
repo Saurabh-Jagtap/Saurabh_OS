@@ -1,110 +1,16 @@
 "use client";
 
-/**
- * Footer.tsx — SaurabhOS Redesign
- * ═══════════════════════════════════════════════════════════════════
- * Concept: "System Shutdown" — the footer feels like the OS powering
- * down: a final status readout, open-channel social nodes rendered
- * as circuit schematic ports, a live heartbeat flatline, lat/lon
- * metadata, and a spark-border that mirrors the navbar.
- *
- * Theme alignment:
- *  • bg-[#060810] base with 48px indigo grid (matches existing footer bg)
- *  • Cyan (#0ef / #06b6d4) + indigo (#6366f1) accent palette
- *  • Same border-spark animation from Navbar.tsx
- *  • Glitch text on logo — same keyframes as HeroSection + Navbar
- *  • Glassmorphic panels with backdrop-blur + border-white/[0.05]
- *  • Corner bracket decorators from ContactSection / HeroSection
- *  • pointer-events-none shell → pointer-events-auto on interactables
- * ═══════════════════════════════════════════════════════════════════
- */
-
 import { useEffect, useRef, useState } from "react";
 import { Github, Linkedin, Twitter, ArrowUpRight } from "lucide-react";
 
 // ─── Data ─────────────────────────────────────────────────────────
 const NAV_LINKS = [
-  { label: "Home",      href: "#"          },
-  { label: "Projects",  href: "#projects"  },
-  { label: "Journey",   href: "#journey"   },
-  { label: "Guestbook", href: "#guestbook" },
-  { label: "Contact",   href: "#contact"   },
+  { label: "$ cd /Home",      href: "#"          },
+  { label: "$ cd /Projects",  href: "#projects"  },
+  { label: "$ cd /Journey",   href: "#journey"   },
+  { label: "$ cd /Guestbook", href: "#guestbook" },
+  { label: "$ cd /Contact",   href: "#contact"   },
 ];
-
-const SOCIAL_NODES = [
-  {
-    icon:    Github,
-    label:   "GitHub",
-    handle:  "/saurabhOS",
-    href:    "https://github.com",
-    color:   "rgba(255,255,255,0.7)",
-    glow:    "rgba(255,255,255,0.08)",
-    border:  "rgba(255,255,255,0.12)",
-  },
-  {
-    icon:    Linkedin,
-    label:   "LinkedIn",
-    handle:  "/in/saurabh",
-    href:    "https://linkedin.com",
-    color:   "#818cf8",
-    glow:    "rgba(99,102,241,0.12)",
-    border:  "rgba(99,102,241,0.25)",
-  },
-  {
-    icon:    Twitter,
-    label:   "X / Twitter",
-    handle:  "@saurabhOS",
-    href:    "https://x.com",
-    color:   "#22d3ee",
-    glow:    "rgba(6,182,212,0.12)",
-    border:  "rgba(6,182,212,0.3)",
-  },
-];
-
-const STACK_CHIPS = [
-  { label: "Next.js",     color: "text-slate-400"  },
-  { label: "TypeScript",  color: "text-indigo-400" },
-  { label: "tRPC",        color: "text-violet-400" },
-  { label: "PostgreSQL",  color: "text-cyan-400"   },
-  { label: "Prisma",      color: "text-emerald-400"},
-  { label: "Tailwind",    color: "text-sky-400"    },
-];
-
-const STATUS_LINES = [
-  { text: "system.shutdown initiated...",    color: "text-slate-500",  delay: 0   },
-  { text: "✓ All sessions saved",           color: "text-emerald-400", delay: 300 },
-  { text: "✓ Build streak: 47 days",        color: "text-cyan-400",    delay: 600 },
-  { text: "✓ Last commit: today",           color: "text-indigo-400",  delay: 900 },
-  { text: "✓ SaurabhOS v1.0.0 — still shipping", color: "text-violet-400", delay: 1200 },
-];
-
-// ─── Corner bracket (reused across all components) ────────────────
-function Corner({
-  pos,
-  color = "rgba(6,182,212,0.3)",
-}: {
-  pos: "tl" | "tr" | "bl" | "br";
-  color?: string;
-}) {
-  const styles: Record<string, React.CSSProperties> = {
-    tl: { top: 0, left: 0, borderTop: `1px solid ${color}`, borderLeft:  `1px solid ${color}` },
-    tr: { top: 0, right: 0, borderTop: `1px solid ${color}`, borderRight: `1px solid ${color}` },
-    bl: { bottom: 0, left: 0, borderBottom: `1px solid ${color}`, borderLeft: `1px solid ${color}` },
-    br: { bottom: 0, right: 0, borderBottom: `1px solid ${color}`, borderRight: `1px solid ${color}` },
-  };
-  return (
-    <span
-      aria-hidden
-      style={{
-        position: "absolute",
-        width: 10,
-        height: 10,
-        pointerEvents: "none",
-        ...styles[pos],
-      }}
-    />
-  );
-}
 
 // ─── SVG heartbeat / flatline ─────────────────────────────────────
 function Heartbeat() {
@@ -142,150 +48,6 @@ function Heartbeat() {
   );
 }
 
-// ─── Animated terminal boot lines ─────────────────────────────────
-function ShutdownTerminal() {
-  const [shown, setShown] = useState(0);
-  const [blink, setBlink] = useState(true);
-  const hasRun = useRef(false);
-
-  useEffect(() => {
-    if (hasRun.current) return;
-    hasRun.current = true;
-
-    STATUS_LINES.forEach((_, i) => {
-      setTimeout(() => setShown(i + 1), STATUS_LINES[i]!.delay + 400);
-    });
-
-    const id = setInterval(() => setBlink((b) => !b), 530);
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <div className="space-y-2 font-mono text-[12px]">
-      <div className="mb-3 text-slate-600 text-[10px] uppercase tracking-[0.2em]">
-        <span className="text-indigo-400">saurabh@os:~/system$</span> shutdown --save-state
-      </div>
-      {STATUS_LINES.slice(0, shown).map(({ text, color }, i) => (
-        <div
-          key={i}
-          className={`${color} transition-all duration-300`}
-          style={{ animation: "termReveal 0.3s ease both" }}
-        >
-          {text}
-        </div>
-      ))}
-      {shown >= STATUS_LINES.length && (
-        <div className="pt-1">
-          <span className="text-indigo-400">saurabh@os:~/system$</span>
-          <span
-            className="inline-block w-[7px] h-[13px] bg-cyan-400 ml-1.5 align-middle"
-            style={{ opacity: blink ? 1 : 0, transition: "opacity 0.1s" }}
-          />
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Social node card (schematic port style) ──────────────────────
-function SocialNode({
-  icon: Icon,
-  label,
-  handle,
-  href,
-  color,
-  glow,
-  border,
-}: (typeof SOCIAL_NODES)[0]) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="group relative flex flex-col items-center gap-3 p-5 rounded-2xl transition-all duration-300"
-      style={{
-        border: `1px solid ${hovered ? border : "rgba(255,255,255,0.05)"}`,
-        background: hovered ? glow : "rgba(0,0,0,0.25)",
-        backdropFilter: "blur(12px)",
-        boxShadow: hovered ? `0 0 30px ${glow}` : "none",
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <Corner pos="tl" color={hovered ? border : "transparent"} />
-      <Corner pos="br" color={hovered ? border : "transparent"} />
-
-      {/* Circuit port ring */}
-      <div
-        className="relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300"
-        style={{
-          border: `1px solid ${hovered ? border : "rgba(255,255,255,0.07)"}`,
-          background: hovered ? `${glow}` : "rgba(0,0,0,0.4)",
-          boxShadow: hovered ? `0 0 16px ${glow}, inset 0 0 8px ${glow}` : "none",
-        }}
-      >
-        {/* Outer dashed orbit ring */}
-        <svg
-          viewBox="0 0 48 48"
-          className="absolute inset-0 w-full h-full"
-          style={{
-            opacity: hovered ? 0.6 : 0.15,
-            transition: "opacity 0.3s",
-            animation: hovered ? "spin 6s linear infinite" : "spin 20s linear infinite",
-          }}
-        >
-          <circle
-            cx="24" cy="24" r="22"
-            fill="none"
-            stroke={color}
-            strokeWidth="0.8"
-            strokeDasharray="3 4"
-          />
-        </svg>
-
-        <Icon
-          className="relative z-10 w-5 h-5 transition-colors duration-300"
-          style={{ color: hovered ? color : "#475569" }}
-        />
-      </div>
-
-      {/* Node connector line (bottom) */}
-      <div
-        className="w-px transition-all duration-300"
-        style={{
-          height: hovered ? 12 : 8,
-          background: `linear-gradient(to bottom, ${color}, transparent)`,
-          opacity: hovered ? 0.7 : 0.2,
-        }}
-      />
-
-      {/* Labels */}
-      <div className="text-center leading-none">
-        <div
-          className="font-mono text-[10px] font-semibold uppercase tracking-widest transition-colors duration-300"
-          style={{ color: hovered ? color : "#334155" }}
-        >
-          {label}
-        </div>
-        <div className="mt-1 font-mono text-[9px] text-slate-600">
-          {handle}
-        </div>
-      </div>
-
-      {/* Arrow */}
-      <ArrowUpRight
-        className="absolute top-3 right-3 w-3 h-3 transition-all duration-200 opacity-0 group-hover:opacity-100"
-        style={{ color }}
-      />
-    </a>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// Main Footer
-// ═══════════════════════════════════════════════════════════════════
 export default function Footer() {
   const year = new Date().getFullYear();
   const [time, setTime] = useState("");
@@ -307,7 +69,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="pointer-events-none relative overflow-hidden bg-[#060810] border-t border-white/[0.04]">
+    <footer className="pointer-events-none relative overflow-hidden bg-[#0a0a0a] border-t border-white/[0.04]">
 
       {/* ── CSS Animations ────────────────────────────────────────── */}
       <style>{`
@@ -387,7 +149,7 @@ export default function Footer() {
       <div className="relative z-10 mx-auto max-w-7xl px-8 pt-16 pb-8">
 
         {/* ── Row 1: Brand + Nav + Coords ──────────────────────────── */}
-        <div className="grid grid-cols-1 gap-10 pb-10 border-b border-white/[0.04] lg:grid-cols-[1fr_auto_1fr]">
+        <div className="grid grid-cols-1 gap-10 pb-10 border-b border-white/[0.04] lg:grid-cols-[1fr_1fr]">
 
           {/* Brand block */}
           <div className="flex flex-col gap-5">
@@ -446,48 +208,6 @@ export default function Footer() {
               <Heartbeat />
             </div>
 
-            {/* Coordinates */}
-            <div className="flex gap-6 mt-1">
-              {[
-                { label: "LAT", val: "18.9220° N" },
-                { label: "LON", val: "72.8347° E" },
-              ].map(({ label, val }) => (
-                <div key={label} className="flex flex-col gap-0.5">
-                  <span className="font-mono text-[9px] text-slate-700 uppercase tracking-[0.15em]">{label}</span>
-                  <span className="font-mono text-[11px] text-slate-500">{val}</span>
-                </div>
-              ))}
-              <div className="flex flex-col gap-0.5">
-                <span className="font-mono text-[9px] text-slate-700 uppercase tracking-[0.15em]">IST</span>
-                <span className="font-mono text-[11px] text-cyan-500/80 tabular-nums">{time}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Social nodes — center ──────────────────────────────── */}
-          <div className="flex flex-col items-center gap-4">
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-slate-700 mb-1">
-              // open.channels
-            </span>
-
-            {/* Circuit line top */}
-            <div className="flex flex-col items-center gap-0">
-              <div className="w-px h-4 bg-gradient-to-b from-transparent to-cyan-500/20" />
-              <div className="w-2 h-2 rounded-full border border-cyan-500/30 bg-cyan-500/10" />
-            </div>
-
-            {/* Node cards */}
-            <div className="pointer-events-auto flex flex-col gap-3 w-full min-w-[180px]">
-              {SOCIAL_NODES.map((node) => (
-                <SocialNode key={node.label} {...node} />
-              ))}
-            </div>
-
-            {/* Circuit line bottom */}
-            <div className="flex flex-col items-center">
-              <div className="w-2 h-2 rounded-full border border-indigo-500/30 bg-indigo-500/10" />
-              <div className="w-px h-4 bg-gradient-to-b from-indigo-500/20 to-transparent" />
-            </div>
           </div>
 
           {/* ── Right block: nav + terminal ───────────────────────── */}
@@ -510,53 +230,7 @@ export default function Footer() {
               ))}
             </div>
 
-            {/* Mini shutdown terminal */}
-            <div
-              className="relative overflow-hidden rounded-xl w-full lg:w-auto lg:min-w-[280px]"
-              style={{
-                border: "1px solid rgba(255,255,255,0.04)",
-                background: "rgba(0,0,0,0.35)",
-                backdropFilter: "blur(12px)",
-              }}
-            >
-              <Corner pos="tl" color="rgba(99,102,241,0.3)" />
-              <Corner pos="br" color="rgba(99,102,241,0.3)" />
-
-              {/* Chrome bar */}
-              <div
-                className="flex items-center gap-2 px-4 py-2.5 border-b"
-                style={{ borderColor: "rgba(255,255,255,0.04)", background: "rgba(0,0,0,0.2)" }}
-              >
-                <div className="h-2 w-2 rounded-full bg-red-500/60" />
-                <div className="h-2 w-2 rounded-full bg-amber-500/60" />
-                <div className="h-2 w-2 rounded-full bg-emerald-500/60" />
-                <span className="ml-2 font-mono text-[9px] text-slate-600">
-                  saurabh@os:~/system
-                </span>
-              </div>
-
-              <div className="p-4">
-                <ShutdownTerminal />
-              </div>
-            </div>
-
           </div>
-        </div>
-
-        {/* ── Row 2: Stack chips ────────────────────────────────────── */}
-        <div className="flex flex-wrap items-center gap-2 py-6 border-b border-white/[0.03]">
-          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-slate-700 mr-2">
-            built with
-          </span>
-          {STACK_CHIPS.map(({ label, color }) => (
-            <span
-              key={label}
-              className={`font-mono text-[10px] ${color} px-3 py-1 rounded-lg bg-white/[0.03] border border-white/[0.04]`}
-            >
-              <span className="text-slate-700 mr-1.5">//</span>
-              {label}
-            </span>
-          ))}
         </div>
 
         {/* ── Row 3: Bottom bar ─────────────────────────────────────── */}

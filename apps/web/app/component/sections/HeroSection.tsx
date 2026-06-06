@@ -35,12 +35,6 @@ useEffect(() => {
 }, []);
 
 return (
-    /*
-     * pointer-events-none on the section shell so the 3D canvas
-     * underneath still receives all mousemove events for its
-     * spotlight reveal. Interactive children (buttons, links)
-     * re-enable pointer-events-auto individually.
-     */
     <section className="pointer-events-none relative min-h-screen text-slate-100">
         
         {/* ── True CSS Glitch Animation Styles ────────────────────── */}
