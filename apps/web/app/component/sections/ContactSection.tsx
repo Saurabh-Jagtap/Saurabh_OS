@@ -50,6 +50,7 @@ export default function ContactSection() {
   return (
     <section
       ref={ref}
+      id="contact"
       className="pointer-events-none relative overflow-hidden py-28"
     >
       {/* ── Global styles (glitch + custom scrollbar) ─────────────── */}

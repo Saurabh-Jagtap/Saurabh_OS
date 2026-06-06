@@ -19,9 +19,13 @@ export default function ArchitectureTree() {
 
           <h2 className="mb-4 text-5xl font-black text-white">
             SaurabhOS{" "}
-            <span className="text-cyan-400">
-              Architecture
-            </span>
+            <span style={{
+                  background: "linear-gradient(90deg, #22d3ee, #818cf8)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}>
+                  Architecture
+                </span>
           </h2>
 
           <p className="font-mono text-sm text-zinc-500">

@@ -54,6 +54,7 @@ export default function ProjectsSection() {
   return (
     <section
       ref={sectionRef}
+      id="projects"
       className="relative overflow-hidden"
     >
       {/* ─── Keyframes ───────────────────────────────────────── */}
