@@ -1,22 +1,5 @@
 "use client";
 
-// JourneyCard.tsx
-// ═══════════════════════════════════════════════════════════════════
-// Each milestone rendered as a glassmorphic HUD commit card.
-//
-// Scroll reveal strategy — Solution B (pure IntersectionObserver):
-//  • A `useReveal` hook fires IO on mount and adds `.is-visible`
-//    to the card ref — no window scroll listener, zero re-renders.
-//  • CSS transitions handle the slide-up + fade via Tailwind classes
-//    toggled by the single JS class add. Runs on GPU compositor.
-//
-// pointer-events contract:
-//  • The card div itself is pointer-events-auto (overrides the
-//    parent section's pointer-events-none shell) so the card is
-//    interactive while the 3D canvas still receives mouse events
-//    through the transparent gaps between cards.
-// ═══════════════════════════════════════════════════════════════════
-
 import { useEffect, useRef } from "react";
 import { type JourneyMilestone, COLOR_MAP } from "./journey-data";
 

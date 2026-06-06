@@ -171,6 +171,7 @@ export default function ProjectsSection() {
                 description={project.description ?? ""}
                 status={project.status}
                 technologies={project.tech_stack}
+                coverImage={project.cover_image_url}
                 githubUrl={project.github_url}
                 liveUrl={project.live_url}
                 index={i}

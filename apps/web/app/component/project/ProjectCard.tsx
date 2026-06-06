@@ -56,10 +56,6 @@ export default function ProjectCard({
   const [hovered, setHovered]   = useState(false);
   const [revealed, setRevealed] = useState(false);
 
-  // ── IntersectionObserver scroll reveal ──────────────────────────
-  // No scroll event listeners. GPU-only: opacity + transform via
-  // a CSS animation triggered by a class/state toggle.
-  // will-change removed after animation completes to free compositor.
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;

@@ -228,7 +228,7 @@ export default function JourneySection() {
               {/* Bottom metadata row */}
               <div className="mt-4 flex flex-wrap items-center gap-4">
                 {[
-                  { label: "streak",   val: "47 days",     color: "text-cyan-400"    },
+                  { label: "streak",   val: "140 days",     color: "text-cyan-400"    },
                   { label: "mission",  val: "SaurabhOS",   color: "text-indigo-400"  },
                   { label: "focus",    val: "System Design", color: "text-violet-400" },
                 ].map(({ label, val, color }) => (
