@@ -1,15 +1,5 @@
 "use client";
 
-// GuestbookSection.tsx
-// ═══════════════════════════════════════════════════════════════════
-// DESIGN ONLY changes — zero logic changes.
-// • Palette shifted from emerald-dominant to cyan + indigo (site theme)
-// • Background, grid, orbs: matches HeroSection / ContactSection
-// • Section header: glitch treatment on "Channel" heading
-// • Stat cards, divider, loading state: all visual updates only
-// • All IntersectionObserver, trpc queries, counters: UNTOUCHED
-// ═══════════════════════════════════════════════════════════════════
-
 import GuestbookEntry from "../guestbook/GuestbookEntry";
 import GuestbookForm  from "../guestbook/GuestbookForm";
 import { trpc }       from "~/trpc/client";
@@ -99,7 +89,6 @@ function StatCard({
 
 // ─── Main section ─────────────────────────────────────────────────
 export default function GuestbookSection() {
-  // ── ALL ORIGINAL LOGIC BELOW (UNTOUCHED) ─────────────────────
   const { data: entries, isLoading } = trpc.guestbook.getEntries.useQuery({ limit: 3 });
 
   const sectionRef = useRef<HTMLElement>(null);

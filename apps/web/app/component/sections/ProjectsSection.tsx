@@ -35,7 +35,7 @@ function StatPill({ label, value, color }: { label: string; value: string; color
 }
 
 export default function ProjectsSection() {
-  // ── All tRPC logic untouched ──────────────────────────────────
+
   const { data: projects, isLoading } = trpc.project.getFeaturedProjects.useQuery()
 
   const sectionRef = useRef<HTMLElement>(null);

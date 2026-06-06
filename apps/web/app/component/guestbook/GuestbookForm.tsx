@@ -1,32 +1,21 @@
 "use client";
 
-// GuestbookForm.tsx
-// ═══════════════════════════════════════════════════════════════════
-// DESIGN ONLY changes — zero logic changes.
-// • alert() replaced with an inline error banner (no window API)
-// • Palette unified to cyan + indigo (matches site theme)
-// • Glass panel, corner brackets, clip-path CTA — SaurabhOS native
-// • All trpc mutations, visitor init, form state: UNTOUCHED
-// ═══════════════════════════════════════════════════════════════════
-
 import { useState } from "react";
 import { Send, AlertCircle, X } from "lucide-react";
 import { trpc } from "~/trpc/client";
 
 export default function GuestbookForm() {
-  // ── All original state (UNTOUCHED) ────────────────────────────
+
   const [name, setName]         = useState("");
   const [message, setMessage]   = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // ── Inline error state (replaces alert) ───────────────────────
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const createGuestbookEntry = trpc.guestbook.createEntry.useMutation();
   const identifyVisitor      = trpc.visitor.identify.useMutation();
   const utils                = trpc.useUtils();
 
-  // ── Original visitor init (UNTOUCHED) ─────────────────────────
   async function initializeVisitor() {
     const visitorId = localStorage.getItem("visitor_id");
     const visitor   = await identifyVisitor.mutateAsync({ visitorId: visitorId ?? undefined });
@@ -34,7 +23,6 @@ export default function GuestbookForm() {
     return visitor.id;
   }
 
-  // ── Original submit handler — alert() replaced with setErrorMsg ─
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !message.trim()) {
