@@ -1,5 +1,3 @@
-import { api } from "~/trpc/server";
-
 import ProjectSection from "./component/sections/ProjectsSection";
 import JourneySection from "./component/sections/JourneySection";
 import GuestbookSection from "./component/sections/GuestbookSection";
@@ -13,9 +11,8 @@ import VisitorInitializer from "./Visitor";
 
 
 export default async function Home() {
-  const { status } = await api.health.getHealth.query();
   return (
-    <main className="min-h-screen min-w-screen">
+    <main className="min-h-screen">
       <VisitorInitializer />
 
       <div>
