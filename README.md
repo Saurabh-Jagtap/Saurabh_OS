@@ -1,135 +1,373 @@
-# Turborepo starter
+# SaurabhOS
 
-This Turborepo starter is maintained by the Turborepo core team.
+> A personal engineering workspace documenting my journey from developer to engineer through projects, experiments, and systems thinking.
 
-## Using this example
+## Overview
 
-Run the following command:
+SaurabhOS is more than a traditional portfolio website. It serves as a personal engineering workspace where I showcase projects, document my learning journey, experiment with modern web technologies, and build features incrementally in public.
 
-```sh
-npx create-turbo@latest
+The project is being built as part of my Web Development Cohort journey and focuses on applying real-world engineering concepts such as monorepo architecture, type-safe APIs, database design, ownership-based authorization, and scalable frontend architecture.
+
+---
+<img width="1897" height="886" alt="SaurabhOS_LandingPage" src="https://github.com/user-attachments/assets/437f7467-ec1d-4ba0-ba63-02d9fcef9d46" />
+<img width="1894" height="906" alt="SaurabhOS_ProjectsPage" src="https://github.com/user-attachments/assets/c4d7e071-9dbd-4b3f-ae5e-94ec94d91882" />
+<img width="1897" height="906" alt="SaurabhOS_Architecture" src="https://github.com/user-attachments/assets/d39bee1e-e13e-43a8-a0b9-1480fed7b2ef" />
+<img width="1898" height="905" alt="SaurabhOS_Contact" src="https://github.com/user-attachments/assets/15fd1466-c4a3-4e30-ae2e-fc579793d282" />
+
+
+
+## Tech Stack
+
+### Frontend
+
+* Next.js 16
+* React
+* TypeScript
+* Tailwind CSS
+* Lucide React
+
+### Backend
+
+* tRPC
+* Node.js
+* TypeScript
+
+### Database
+
+* PostgreSQL
+* Drizzle ORM
+
+### Monorepo
+
+* Turborepo
+* PNPM Workspaces
+
+### Other Tools
+
+* Zod
+* Vercel
+* Git & GitHub
+
+---
+
+## Features Implemented
+
+### Portfolio Showcase
+
+* Modern custom UI
+* Responsive layout
+* Dynamic project showcase
+* Database-driven project rendering
+
+### Guestbook System
+
+* Create guestbook entries
+* Edit guestbook entries
+* Soft delete guestbook entries
+* Visitor ownership validation
+* Recent entries display
+
+### Visitor Tracking
+
+* Visitor identification
+* Persistent visitor sessions
+* Ownership-based actions
+
+### Project Reactions
+
+* Multiple reaction types
+* Per-visitor reactions
+* Reaction aggregation
+
+### Engineering Journey
+
+* Timeline of learning milestones
+* Cohort progress documentation
+* Project evolution tracking
+
+### Monorepo Architecture
+
+* Shared packages
+* Shared types
+* Shared services
+* Shared database layer
+
+---
+
+## Architecture
+
+```text
+SaurabhOS
+│
+├── Presentation Layer
+│   ├── Hero
+│   ├── Projects
+│   ├── Journey
+│   ├── Guestbook
+│   └── Contact
+│
+├── Application Layer
+│   ├── tRPC Routers
+│   ├── Services
+│   ├── Validation
+│   └── Shared Types
+│
+└── Data Layer
+    ├── Visitors
+    ├── Projects
+    ├── Guestbook
+    └── Reactions
 ```
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## Project Structure
 
-### Apps and Packages
+```text
+apps/
+└── web/
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+packages/
+├── database/
+├── services/
+├── trpc/
+└── types/
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+## Database Tables
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+### Visitors
 
-### Develop
+Stores unique visitor identities.
 
-To develop all apps and packages, run the following command:
+### Projects
 
-```
-cd my-turborepo
+Stores project metadata and showcase information.
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### Guestbook
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+Stores public visitor messages.
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Reactions
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+Stores project reactions and engagement data.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+---
+
+## Routes / Pages
+
+### Current Pages
+
+```text
+/
 ```
 
-### Remote Caching
+### Planned Pages
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+```text
+/projects
+/projects/[slug]
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+/journey
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+/guestbook
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+---
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## API Layer
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+### tRPC Procedures
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+#### Health
+
+```text
+health.getHealth
 ```
 
-## Useful Links
+#### Visitor
 
-Learn more about the power of Turborepo:
+```text
+visitor.identify
+```
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+#### Guestbook
+
+```text
+guestbook.createEntry
+guestbook.getEntries
+guestbook.updateEntry
+guestbook.deleteEntry
+```
+
+#### Projects
+
+```text
+project.getProjects
+```
+
+#### Reactions
+
+```text
+reaction.reactToProject
+reaction.getReactionCounts
+```
+
+---
+
+## Server Actions
+
+Currently not implemented.
+
+Planned use cases:
+
+* Contact form submission
+* Admin project management
+* Guestbook moderation
+
+---
+
+## Rendering Strategies
+
+### SSR (Server Side Rendering)
+
+Planned
+
+### SSG (Static Site Generation)
+
+Planned
+
+### ISR (Incremental Static Regeneration)
+
+Planned
+
+Current focus has been on architecture, database integration, and feature implementation before introducing advanced rendering strategies.
+
+---
+
+## Concepts Covered
+
+This project demonstrates concepts learned throughout the Web Development Cohort:
+
+* Git & GitHub
+* HTML & CSS
+* JavaScript Fundamentals
+* React
+* Next.js
+* TypeScript
+* API Design
+* Database Integration
+* PostgreSQL
+* Drizzle ORM
+* Validation using Zod
+* tRPC
+* Monorepo Architecture
+* Ownership-based Authorization
+* Soft Deletion Patterns
+* Component Architecture
+
+---
+
+## Environment Variables
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=
+
+NEXT_PUBLIC_API_URL=
+```
+
+---
+
+## Database Setup
+
+### Install Dependencies
+
+```bash
+pnpm install
+```
+
+### Generate Migrations
+
+```bash
+pnpm db:generate
+```
+
+### Run Migrations
+
+```bash
+pnpm db:migrate
+```
+
+### Seed Database
+
+```bash
+pnpm db:seed
+```
+
+---
+
+## Running Locally
+
+### Install Dependencies
+
+```bash
+pnpm install
+```
+
+### Start Development Server
+
+```bash
+pnpm dev
+```
+
+Application will be available at:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## Current Status
+
+🚧 Active Development
+
+The project is still under active development.
+
+Upcoming work includes:
+
+* Dynamic project detail pages
+* Public API routes
+* Server Actions
+* SSR / SSG / ISR implementation
+* Contact system backend
+* Improved project analytics
+* Real-time reactions
+* Additional engineering features
+
+---
+
+## Lessons Learned
+
+Building SaurabhOS has helped me transition from thinking purely as a developer to thinking more like an engineer by focusing on:
+
+* Architecture decisions
+* Scalability
+* Ownership and authorization
+* Maintainability
+* Reusability
+* System design
+
+---
+
+## Author
+
+**Saurabh Jagtap**
+
+Building in public, learning continuously, and documenting the journey one project at a time.
+
+⭐ If you found this project interesting, feel free to explore the codebase and share feedback.
